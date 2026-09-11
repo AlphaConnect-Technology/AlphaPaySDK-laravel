@@ -21,12 +21,17 @@ toute la mécanique HTTP/retry/pagination/signature reste dans le SDK core.
       en test) est bien accepté par `WebhookController` -- créer un endpoint
       de test depuis le dashboard pointant vers une URL exposée (ex. ngrok)
       et déclencher un paiement sandbox réel.
-- [ ] Choisir le nom de package Packagist définitif (`alphapay/alphapay-laravel`
-      est provisoire) et vérifier sa disponibilité.
-- [ ] Décider des versions Laravel réellement supportées -- `composer.json`
-      déclare `illuminate/* : ^9.0|^10.0|^11.0|^12.0` par choix large, jamais
-      testé contre autre chose que Laravel 12 (seule version résolue par
-      testbench dans cet environnement).
+- [x] Choisir le nom de package Packagist définitif — confirmé `alphapay/alphapay-laravel`,
+      vérifié libre (404 sur `packagist.org/packages/alphapay/alphapay-laravel.json`).
+- [x] Versions Laravel réellement supportées — la plage déclarée
+      (`illuminate/* : ^9.0|^10.0|^11.0|^12.0`) est désormais **vérifiée aux
+      deux bornes et au milieu**, pas juste supposée : les 9 mêmes tests
+      (29 assertions) tournent verts contre Laravel 9/testbench 7
+      (PHPUnit 9.6), Laravel 10/testbench 8 (PHPUnit 10.5) et Laravel
+      12/testbench 10 (PHPUnit 11.5, config par défaut). Corrigé au passage :
+      `phpunit.xml` utilisait l'élément `<source>`, invalide avant PHPUnit
+      10 (avertissement de schéma sous Laravel 9) -- retiré, portée de
+      couverture par défaut suffisante.
 
 ## Souhaitable avant v1.0.0
 

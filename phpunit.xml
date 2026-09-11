@@ -8,9 +8,8 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <source>
-        <include>
-            <directory>src</directory>
-        </include>
-    </source>
+    <!-- Pas de bloc source/coverage : l'élément "source" n'existe qu'à partir de
+         PHPUnit 10 (avertissement de schéma sous PHPUnit 9, cf. composer.json
+         qui supporte 9.5, 10.5 et 11 pour couvrir Laravel 9 à 12). La portée
+         de couverture par défaut suffit, pas besoin d'un fichier par version. -->
 </phpunit>
