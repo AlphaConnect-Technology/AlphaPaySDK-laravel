@@ -55,7 +55,12 @@ $payment = AlphaPay::transactions()->payinInitialize([
     'currency' => 'XOF',
     'country' => 'BJ',
     'network' => 'mtn_bj', // format réel attendu par l'API -- voir la doc du SDK core
-    'customer' => ['full_name' => 'Ayaba Client', 'phone' => '+22900000000'],
+    'customer' => [
+        'email' => 'ayaba@example.com',
+        'first_name' => 'Ayaba',
+        'last_name' => 'Client',
+        'phone' => '+22900000000',
+    ],
     'description' => 'Commande #1234',
 ], idempotencyKey: true);
 ```
