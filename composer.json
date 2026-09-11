@@ -1,0 +1,55 @@
+{
+    "name": "alphapay/alphapay-laravel",
+    "description": "Laravel SDK officiel pour l'API AlphaPay (agrégateur de paiement multi-gateway) -- intégration Service Provider/Facade/webhooks au-dessus du SDK PHP alphapay/alphapay-php.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["alphapay", "laravel", "payments", "mobile-money", "payment-gateway", "africa", "mtn", "orange-money", "moov"],
+    "homepage": "https://github.com/AlphaConnect-Technology/AlphaPaySDK-laravel",
+    "authors": [
+        {
+            "name": "AlphaPay",
+            "email": "contact@alphapay.me",
+            "homepage": "https://alphapay.me"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "alphapay/alphapay-php": "^0.1.1",
+        "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+        "illuminate/database": "^9.0|^10.0|^11.0|^12.0",
+        "illuminate/console": "^9.0|^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^9.5|^10.5|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AlphaPay\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AlphaPay\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": "find src -name '*.php' -print0 | xargs -0 -n1 -P4 php -l"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AlphaPay\\Laravel\\AlphaPayServiceProvider"
+            ],
+            "aliases": {
+                "AlphaPay": "AlphaPay\\Laravel\\Facades\\AlphaPay"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
