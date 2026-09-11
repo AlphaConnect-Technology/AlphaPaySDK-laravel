@@ -54,4 +54,5 @@ class ServiceProviderTest extends TestCase
         $this->assertNotNull(AlphaPay::apiKeys());
         $this->assertNotNull(AlphaPay::webhookEndpoints());
     }
+
 }

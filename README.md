@@ -72,6 +72,13 @@ Toutes les ressources du SDK core sont exposées en méthodes sur la Facade :
 core (`AlphaPay\Resources\...`) -- même API, mêmes exceptions, mêmes
 restrictions `dashboard_only` que documentées dans le SDK PHP.
 
+Les liens prennent aussi en charge `require_phone`, `facebook_pixel_id`,
+`google_ads_id`, `custom_fields`, `show_confirmation_page` et `redirect_url`.
+Le flux public est disponible via la ressource
+`AlphaPay::paymentLinks()->getPublic($slug)` et
+`AlphaPay::paymentLinks()->createPublicCheckout($slug, $payload)` après
+publication de la version correspondante du SDK PHP core.
+
 ### Avec l'injection de dépendances
 
 ```php
