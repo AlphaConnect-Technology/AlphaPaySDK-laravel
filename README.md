@@ -70,7 +70,7 @@ Toutes les ressources du SDK core sont exposées en méthodes sur la Facade :
 `settlements()`, `walletTransfers()`, `balances()`, `apiKeys()`,
 `webhookEndpoints()`. Chacune renvoie directement l'objet `Resource` du SDK
 core (`AlphaPay\Resources\...`) -- même API, mêmes exceptions, mêmes
-restrictions `dashboard_only` que documentées dans le SDK PHP.
+restrictions d'accès par clé API que documentées dans le SDK PHP.
 
 Les liens prennent aussi en charge `require_phone`, `facebook_pixel_id`,
 `google_ads_id`, `custom_fields`, `show_confirmation_page` et `redirect_url`.
@@ -78,6 +78,49 @@ Le flux public est disponible via la ressource
 `AlphaPay::paymentLinks()->getPublic($slug)` et
 `AlphaPay::paymentLinks()->createPublicCheckout($slug, $payload)` après
 publication de la version correspondante du SDK PHP core.
+
+### Transferts interwallet (approvisionner un wallet pays)
+
+Accessibles via clé API : `create()` exige une clé de scope `PAYOUT` ou
+`BOTH`, `list()`/`get()` acceptent toute clé du marchand. Détails (codes
+d'erreur 422, frais, statuts) : section "Transferts interwallet" du README
+du SDK PHP.
+
+```php
+use AlphaPay\Exceptions\AlphaPayValidationException;
+use AlphaPay\Laravel\Facades\AlphaPay;
+
+try {
+    $transfer = AlphaPay::walletTransfers()->create(
+        ['from_country' => 'BJ', 'to_country' => 'CM', 'from_amount' => 100000],
+        "fund-cm-{$payout->id}" // Idempotency-Key
+    );
+} catch (AlphaPayValidationException $e) {
+    // same_country, transfer_already_pending, wallet_frozen, insufficient_balance
+    report($e);
+    return;
+}
+
+if ($transfer['status'] === 'COMPLETED') {
+    SendMobileMoneyPayout::dispatch($payout); // wallet CM déjà crédité
+}
+// Sinon PENDING : en attente de validation AlphaPay -> voir WalletTransferEvent ci-dessous.
+```
+
+Un transfert n'est `COMPLETED` immédiatement que si l'auto-approbation est
+activée pour votre compte par AlphaPay. Sinon, enchaînez sur le webhook :
+
+```php
+use AlphaPay\Laravel\Events\WalletTransferEvent;
+
+Event::listen(function (WalletTransferEvent $event) {
+    if ($event->isCompleted()) {
+        // retrouver le payout en attente via $event->getReference() / getId()
+    } elseif ($event->isRejected()) {
+        // transfert refusé : motif via AlphaPay::walletTransfers()->get($event->getId())['rejection_reason']
+    }
+});
+```
 
 ### Avec l'injection de dépendances
 

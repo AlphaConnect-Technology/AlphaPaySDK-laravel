@@ -63,6 +63,12 @@ toute la mécanique HTTP/retry/pagination/signature reste dans le SDK core.
       `transaction.{created,success,failed,cancelled}`,
       `settlement.{requested,approved,success,failed,cancelled}`,
       `wallet_transfer.{requested,completed,rejected}`.
+- [x] Transferts interwallet ouverts à la clé API côté AlphaPayBack (`main`,
+      2026-09-24) : docblock de `WalletTransferEvent` et README mis à jour
+      (plus "dashboard-only"), exemple transfert -> webhook -> payout, test
+      `test_wallet_transfer_webhook_dispatches_wallet_transfer_event`. Aucun
+      changement de contrainte : `alphapay/alphapay-php: ^0.1.1` couvre la
+      0.1.2 qui documente ces changements.
 - [x] Table `alphapay_transactions` : champs alignés sur le payload webhook
       réel (`reference`, `type`, `status`, `amount`, `fee`, `charged`,
       `net_amount`, `fee_charge_mode`, `currency`, `network`, `country`,

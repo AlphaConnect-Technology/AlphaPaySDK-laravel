@@ -11,9 +11,13 @@ use Illuminate\Queue\SerializesModels;
  * Émis pour tout webhook `wallet_transfer.*` (requested/completed/rejected)
  * vérifié. `$data` = {id, reference, status, from_country, from_amount,
  * from_currency, to_country, to_amount, to_currency} -- cf.
- * build_event_payload() côté AlphaPayBack. Ressource dashboard-only côté
- * SDK (walletTransfers->create() n'est pas accessible via clé API), mais
- * les webhooks associés vous parviennent normalement.
+ * build_event_payload() côté AlphaPayBack. Les transferts créés via
+ * AlphaPay::walletTransfers()->create() (clé de scope PAYOUT/BOTH) comme
+ * depuis le dashboard émettent ces événements -- c'est le moyen fiable de
+ * savoir quand un transfert PENDING est approuvé (completed) ou refusé
+ * (rejected) par AlphaPay. Le payload ne contient pas les frais : `to_amount`
+ * est déjà net, le détail (fee_amount...) reste disponible via
+ * AlphaPay::walletTransfers()->get($event->getId()).
  */
 class WalletTransferEvent
 {

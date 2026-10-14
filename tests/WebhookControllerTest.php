@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AlphaPay\Laravel\Tests;
 
 use AlphaPay\Laravel\Events\TransactionEvent;
+use AlphaPay\Laravel\Events\WalletTransferEvent;
 use AlphaPay\Laravel\Events\WebhookReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -124,5 +125,36 @@ class WebhookControllerTest extends TestCase
 
         $response->assertOk();
         $this->assertDatabaseMissing(config('alphapay.transactions_table'), ['reference' => 'STL-1']);
+    }
+
+    public function test_wallet_transfer_webhook_dispatches_wallet_transfer_event(): void
+    {
+        Event::fake([WalletTransferEvent::class]);
+
+        $body = json_encode([
+            'event' => 'wallet_transfer.completed',
+            'data' => [
+                'id' => 'b2c3d4e5-0000-0000-0000-000000000000',
+                'reference' => 'WT-1',
+                'status' => 'COMPLETED',
+                'from_country' => 'BJ',
+                'from_amount' => '100000.00',
+                'from_currency' => 'XOF',
+                'to_country' => 'CM',
+                'to_amount' => '98000.00',
+                'to_currency' => 'XAF',
+            ],
+        ]);
+        $timestamp = time();
+
+        $response = $this->postWebhook($body, $this->sign($body, $timestamp), (string) $timestamp);
+
+        $response->assertOk();
+        Event::assertDispatched(WalletTransferEvent::class, function (WalletTransferEvent $event) {
+            return $event->isCompleted()
+                && $event->getToCountry() === 'CM'
+                && $event->getToAmount() === '98000.00';
+        });
+        $this->assertDatabaseMissing(config('alphapay.transactions_table'), ['reference' => 'WT-1']);
     }
 }
