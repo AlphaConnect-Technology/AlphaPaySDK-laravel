@@ -8,7 +8,6 @@ SDK Laravel officiel pour l'API AlphaPay (agrégateur de paiement multi-gateway)
 > déjà publié sur Packagist. Ce package ne réimplémente **aucune** logique
 > HTTP/retry/pagination/signature -- tout vient du SDK core, ce package
 > n'ajoute que l'intégration Laravel (config, DI, routes, events, Eloquent).
-> Voir [CHECKLIST.md](./CHECKLIST.md) avant publication.
 
 ## Installation
 
